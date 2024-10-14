@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Diário de Implantação</title>
+    <style>
+        /* Estilização básica */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        textarea, input[type="text"], input[type="date"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Relatório Diário de Implantação</h1>
+
+    <div class="section">
+        <label for="data">Data:</label>
+        <input type="date" id="data" required>
+    </div>
+
+    <div class="section">
+        <label for="atividades">1. Atividades Realizadas:</label>
+        <textarea id="atividades" rows="5" required></textarea>
+    </div>
+
+    <div class="section">
+        <label for="colaboradores">2. Colaboradores Atendidos:</label>
+        <textarea id="colaboradores" rows="3" required></textarea>
+    </div>
+
+    <div class="section">
+        <label for="conteudos">3. Conteúdos Abordados:</label>
+        <textarea id="conteudos" rows="5" required></textarea>
+    </div>
+
+    <div class="section">
+        <label for="dificuldades">4. Dificuldades Encontradas:</label>
+        <textarea id="dificuldades" rows="5"></textarea>
+    </div>
+
+    <div class="section">
+        <label for="acoes">5. Ações Corretivas ou Planos Futuros:</label>
+        <textarea id="acoes" rows="5"></textarea>
+    </div>
+
+    <div class="section">
+        <label for="observacoes">6. Observações Gerais:</label>
+        <textarea id="observacoes" rows="5"></textarea>
+    </div>
+
+    <button onclick="gerarPDF()">Gerar PDF</button>
+
+    <!-- Inclua a biblioteca jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Script para gerar o PDF -->
+    <script>
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+
+            // Captura os valores dos campos
+            const data = document.getElementById('data').value;
+            const atividades = document.getElementById('atividades').value;
+            const colaboradores = document.getElementById('colaboradores').value;
+            const conteudos = document.getElementById('conteudos').value;
+            const dificuldades = document.getElementById('dificuldades').value;
+            const acoes = document.getElementById('acoes').value;
+            const observacoes = document.getElementById('observacoes').value;
+
+            // Cria um novo documento PDF
+            const doc = new jsPDF();
+
+            // Adiciona o conteúdo ao PDF
+            doc.setFontSize(18);
+            doc.text("Relatório Diário de Implantação", 105, 15, null, null, "center");
+
+            doc.setFontSize(12);
+            doc.text(`Data: ${data}`, 14, 30);
+
+            let yPosition = 40;
+
+            doc.setFontSize(14);
+            doc.text("1. Atividades Realizadas:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(atividades, 180), 14, yPosition + 7);
+
+            yPosition += 30;
+            doc.setFontSize(14);
+            doc.text("2. Colaboradores Atendidos:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(colaboradores, 180), 14, yPosition + 7);
+
+            yPosition += 30;
+            doc.setFontSize(14);
+            doc.text("3. Conteúdos Abordados:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(conteudos, 180), 14, yPosition + 7);
+
+            yPosition += 30;
+            doc.setFontSize(14);
+            doc.text("4. Dificuldades Encontradas:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(dificuldades, 180), 14, yPosition + 7);
+
+            yPosition += 30;
+            doc.setFontSize(14);
+            doc.text("5. Ações Corretivas ou Planos Futuros:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(acoes, 180), 14, yPosition + 7);
+
+            yPosition += 30;
+            doc.setFontSize(14);
+            doc.text("6. Observações Gerais:", 14, yPosition);
+            doc.setFontSize(12);
+            doc.text(doc.splitTextToSize(observacoes, 180), 14, yPosition + 7);
+
+            // Adiciona o rodapé com o nome e data
+            doc.setFontSize(12);
+            doc.text(`\n\nRelatado por:\n[Seu Nome]\n[Função]\n${data}`, 14, yPosition + 50);
+
+            // Salva o PDF com o nome e data atual
+            doc.save(`Relatorio_${data}.pdf`);
+        }
+    </script>
+
+</body>
+</html>

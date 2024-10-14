@@ -8,14 +8,18 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f8f9fa;
+            color: #343a40;
         }
 
         h1 {
             color: #333;
+            text-align: center;
         }
 
         label {
             font-weight: bold;
+            margin-top: 10px;
         }
 
         input, textarea, select {
@@ -24,6 +28,7 @@
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
         }
 
         button {
@@ -33,6 +38,7 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            width: 100%;
         }
 
         button:hover {
@@ -42,6 +48,16 @@
         .container {
             max-width: 800px;
             margin: auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -55,8 +71,8 @@
     <label for="marketName">Nome do Mercado:</label>
     <select id="marketName" required>
         <option value="">Selecione o mercado</option>
-        <option value="SM Joana D'Arc">SM Joana D'Arc</option>
-        <option value="SM Alvaro">SM Alvaro</option>
+        <option value="Joana D'Arc">Joana D'Arc</option>
+        <option value="Alvaro">Alvaro</option>
     </select>
 
     <label for="date">Data:</label>
@@ -114,7 +130,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-    // Aplicando a máscara na entrada de data
     $(document).ready(function() {
         $("#date").inputmask("99/99/9999", { "placeholder": "DD/MM/AAAA" });
     });
@@ -136,63 +151,60 @@
         const observations = document.getElementById("observations").value;
         const userName = document.getElementById("userName").value;
 
-        // Título
         doc.setFontSize(16);
         doc.text("Relatório Diário de Implantação", 10, 10);
-
-        // Nome do Mercado
         doc.setFontSize(12);
         doc.text(`Nome do Mercado: ${marketName}`, 10, 20);
-
-        // Data e Horário
         doc.text(`Data: ${date}`, 10, 30);
         doc.text(`Horário de Início: ${startTime}`, 10, 40);
         doc.text(`Horário de Fim: ${endTime}`, 10, 50);
-
-        // Tipo de Atividade
         doc.text(`Tipo de Atividade: ${activityType}`, 10, 60);
-
-        // Atividades Realizadas
         doc.text("Atividades Realizadas:", 10, 70);
         doc.text(activities, 10, 80);
-
-        // Colaboradores Atendidos
         doc.text("Colaboradores Atendidos:", 10, 100);
         doc.text(collaborators, 10, 110);
-
-        // Conteúdos Abordados
         doc.text("Conteúdos Abordados:", 10, 130);
         doc.text(topics, 10, 140);
-
-        // Dificuldades Encontradas
         doc.text("Dificuldades Encontradas:", 10, 160);
         doc.text(difficulties, 10, 170);
-
-        // Ações Corretivas ou Planos Futuros
         doc.text("Ações Corretivas ou Planos Futuros:", 10, 190);
         doc.text(actions, 10, 200);
-
-        // Observações Gerais
         doc.text("Observações Gerais:", 10, 220);
         doc.text(observations, 10, 230);
-
-        // Nome do Usuário
         doc.text(`Nome do Usuário: ${userName}`, 10, 250);
 
-        // Formato do nome do arquivo com data e hora
         const currentDateTime = new Date();
         const currentDay = String(currentDateTime.getDate()).padStart(2, '0');
         const currentMonth = String(currentDateTime.getMonth() + 1).padStart(2, '0');
         const currentYear = currentDateTime.getFullYear();
         const hours = String(currentDateTime.getHours()).padStart(2, '0');
         const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
-        
         const fileName = `Relatorio_${marketName}_${currentDay}-${currentMonth}-${currentYear}_${hours}-${minutes}.pdf`;
 
-        // Salvar o PDF
-        doc.save(fileName);
+        // Salva o PDF em memória
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+
+        // Cria um link para download
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = fileName;
+        link.click();
+
+        // Limpa os campos após gerar o PDF
+        document.getElementById("marketName").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("startTime").value = "";
+        document.getElementById("endTime").value = "";
+        document.getElementById("activityType").value = "";
+        document.getElementById("activities").value = "";
+        document.getElementById("collaborators").value = "";
+        document.getElementById("topics").value = "";
+        document.getElementById("difficulties").value = "";
+        document.getElementById("actions").value = "";
+        document.getElementById("observations").value = "";
+        document.getElementById("userName").value = "";
     }
 </script>
-
 </body>
 </html>

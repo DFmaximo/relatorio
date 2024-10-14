@@ -44,6 +44,8 @@
             margin: auto;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
 </head>
 <body>
 
@@ -51,10 +53,14 @@
     <h1>Relatório Diário de Implantação</h1>
 
     <label for="marketName">Nome do Mercado:</label>
-    <input type="text" id="marketName" placeholder="Digite o nome do mercado" required>
+    <select id="marketName" required>
+        <option value="">Selecione o mercado</option>
+        <option value="SM Joana D'Arc">SM Joana D'Arc</option>
+        <option value="SM Alvaro">SM Alvaro</option>
+    </select>
 
     <label for="date">Data:</label>
-    <input type="date" id="date" required>
+    <input type="text" id="date" placeholder="DD/MM/AAAA" maxlength="10" required>
 
     <label for="startTime">Horário de Início:</label>
     <input type="time" id="startTime" required>
@@ -90,13 +96,29 @@
     <textarea id="observations" rows="3"></textarea>
 
     <label for="userName">Nome do Usuário:</label>
-    <input type="text" id="userName" placeholder="Seu nome" required>
+    <select id="userName" required>
+        <option value="">Selecione o usuário</option>
+        <option value="Diego">Diego</option>
+        <option value="Marco">Marco</option>
+        <option value="Romario">Romario</option>
+        <option value="Thaina">Thaina</option>
+        <option value="Alexandre">Alexandre</option>
+        <option value="Luiz">Luiz</option>
+        <option value="Daniela">Daniela</option>
+        <option value="André">André</option>
+        <option value="Rogerio">Rogerio</option>
+    </select>
 
     <button onclick="generatePDF()">Gerar PDF</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+    // Aplicando a máscara na entrada de data
+    $(document).ready(function() {
+        $("#date").inputmask("99/99/9999", { "placeholder": "DD/MM/AAAA" });
+    });
+
     function generatePDF() {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -114,13 +136,6 @@
         const observations = document.getElementById("observations").value;
         const userName = document.getElementById("userName").value;
 
-        // Convertendo a data para o formato DD/MM/AAAA
-        const formattedDate = new Date(date);
-        const day = String(formattedDate.getDate()).padStart(2, '0');
-        const month = String(formattedDate.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
-        const year = formattedDate.getFullYear();
-        const formattedDateString = `${day}-${month}-${year}`;
-
         // Título
         doc.setFontSize(16);
         doc.text("Relatório Diário de Implantação", 10, 10);
@@ -130,7 +145,7 @@
         doc.text(`Nome do Mercado: ${marketName}`, 10, 20);
 
         // Data e Horário
-        doc.text(`Data: ${formattedDateString}`, 10, 30);
+        doc.text(`Data: ${date}`, 10, 30);
         doc.text(`Horário de Início: ${startTime}`, 10, 40);
         doc.text(`Horário de Fim: ${endTime}`, 10, 50);
 
@@ -164,7 +179,7 @@
         // Nome do Usuário
         doc.text(`Nome do Usuário: ${userName}`, 10, 250);
 
-        // Formato do nome do arquivo com data e hora no formato DD/MM/AAAA
+        // Formato do nome do arquivo com data e hora
         const currentDateTime = new Date();
         const currentDay = String(currentDateTime.getDate()).padStart(2, '0');
         const currentMonth = String(currentDateTime.getMonth() + 1).padStart(2, '0');

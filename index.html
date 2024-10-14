@@ -1,146 +1,183 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatório Diário de Implantação</title>
     <style>
-        /* Estilização básica */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
         }
-        h1, h2 {
-            text-align: center;
+
+        h1 {
+            color: #333;
         }
+
         label {
             font-weight: bold;
         }
-        textarea, input[type="text"], input[type="date"] {
+
+        input, textarea, select {
             width: 100%;
-            margin-bottom: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
-        .section {
-            margin-bottom: 20px;
-        }
+
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
         }
     </style>
 </head>
 <body>
 
+<div class="container">
     <h1>Relatório Diário de Implantação</h1>
 
-    <div class="section">
-        <label for="data">Data:</label>
-        <input type="date" id="data" required>
-    </div>
+    <label for="marketName">Nome do Mercado:</label>
+    <input type="text" id="marketName" placeholder="Digite o nome do mercado" required>
 
-    <div class="section">
-        <label for="atividades">1. Atividades Realizadas:</label>
-        <textarea id="atividades" rows="5" required></textarea>
-    </div>
+    <label for="date">Data:</label>
+    <input type="date" id="date" required>
 
-    <div class="section">
-        <label for="colaboradores">2. Colaboradores Atendidos:</label>
-        <textarea id="colaboradores" rows="3" required></textarea>
-    </div>
+    <label for="startTime">Horário de Início:</label>
+    <input type="time" id="startTime" required>
 
-    <div class="section">
-        <label for="conteudos">3. Conteúdos Abordados:</label>
-        <textarea id="conteudos" rows="5" required></textarea>
-    </div>
+    <label for="endTime">Horário de Fim:</label>
+    <input type="time" id="endTime" required>
 
-    <div class="section">
-        <label for="dificuldades">4. Dificuldades Encontradas:</label>
-        <textarea id="dificuldades" rows="5"></textarea>
-    </div>
+    <label for="activityType">Tipo de Atividade:</label>
+    <select id="activityType" required>
+        <option value="Treinamento">Treinamento</option>
+        <option value="Configuração">Configuração</option>
+        <option value="Instalação">Instalação</option>
+        <option value="Ocioso">Ocioso</option>
+        <option value="Reunião">Reunião</option>
+    </select>
 
-    <div class="section">
-        <label for="acoes">5. Ações Corretivas ou Planos Futuros:</label>
-        <textarea id="acoes" rows="5"></textarea>
-    </div>
+    <label for="activities">Descrição das Atividades Realizadas:</label>
+    <textarea id="activities" rows="4" required></textarea>
 
-    <div class="section">
-        <label for="observacoes">6. Observações Gerais:</label>
-        <textarea id="observacoes" rows="5"></textarea>
-    </div>
+    <label for="collaborators">Colaboradores Atendidos:</label>
+    <textarea id="collaborators" rows="3" required></textarea>
 
-    <button onclick="gerarPDF()">Gerar PDF</button>
+    <label for="topics">Conteúdos Abordados:</label>
+    <textarea id="topics" rows="3" required></textarea>
 
-    <!-- Inclua a biblioteca jsPDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <label for="difficulties">Dificuldades Encontradas:</label>
+    <textarea id="difficulties" rows="3" required></textarea>
 
-    <!-- Script para gerar o PDF -->
-    <script>
-        function gerarPDF() {
-            const { jsPDF } = window.jspdf;
+    <label for="actions">Ações Corretivas ou Planos Futuros:</label>
+    <textarea id="actions" rows="3" required></textarea>
 
-            // Captura os valores dos campos
-            const data = document.getElementById('data').value;
-            const atividades = document.getElementById('atividades').value;
-            const colaboradores = document.getElementById('colaboradores').value;
-            const conteudos = document.getElementById('conteudos').value;
-            const dificuldades = document.getElementById('dificuldades').value;
-            const acoes = document.getElementById('acoes').value;
-            const observacoes = document.getElementById('observacoes').value;
+    <label for="observations">Observações Gerais:</label>
+    <textarea id="observations" rows="3"></textarea>
 
-            // Cria um novo documento PDF
-            const doc = new jsPDF();
+    <label for="userName">Nome do Usuário:</label>
+    <input type="text" id="userName" placeholder="Seu nome" required>
 
-            // Adiciona o conteúdo ao PDF
-            doc.setFontSize(18);
-            doc.text("Relatório Diário de Implantação", 105, 15, null, null, "center");
+    <button onclick="generatePDF()">Gerar PDF</button>
+</div>
 
-            doc.setFontSize(12);
-            doc.text(`Data: ${data}`, 14, 30);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-            let yPosition = 40;
+        const marketName = document.getElementById("marketName").value;
+        const date = document.getElementById("date").value;
+        const startTime = document.getElementById("startTime").value;
+        const endTime = document.getElementById("endTime").value;
+        const activityType = document.getElementById("activityType").value;
+        const activities = document.getElementById("activities").value;
+        const collaborators = document.getElementById("collaborators").value;
+        const topics = document.getElementById("topics").value;
+        const difficulties = document.getElementById("difficulties").value;
+        const actions = document.getElementById("actions").value;
+        const observations = document.getElementById("observations").value;
+        const userName = document.getElementById("userName").value;
 
-            doc.setFontSize(14);
-            doc.text("1. Atividades Realizadas:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(atividades, 180), 14, yPosition + 7);
+        // Convertendo a data para o formato DD/MM/AAAA
+        const formattedDate = new Date(date);
+        const day = String(formattedDate.getDate()).padStart(2, '0');
+        const month = String(formattedDate.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const year = formattedDate.getFullYear();
+        const formattedDateString = `${day}-${month}-${year}`;
 
-            yPosition += 30;
-            doc.setFontSize(14);
-            doc.text("2. Colaboradores Atendidos:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(colaboradores, 180), 14, yPosition + 7);
+        // Título
+        doc.setFontSize(16);
+        doc.text("Relatório Diário de Implantação", 10, 10);
 
-            yPosition += 30;
-            doc.setFontSize(14);
-            doc.text("3. Conteúdos Abordados:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(conteudos, 180), 14, yPosition + 7);
+        // Nome do Mercado
+        doc.setFontSize(12);
+        doc.text(`Nome do Mercado: ${marketName}`, 10, 20);
 
-            yPosition += 30;
-            doc.setFontSize(14);
-            doc.text("4. Dificuldades Encontradas:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(dificuldades, 180), 14, yPosition + 7);
+        // Data e Horário
+        doc.text(`Data: ${formattedDateString}`, 10, 30);
+        doc.text(`Horário de Início: ${startTime}`, 10, 40);
+        doc.text(`Horário de Fim: ${endTime}`, 10, 50);
 
-            yPosition += 30;
-            doc.setFontSize(14);
-            doc.text("5. Ações Corretivas ou Planos Futuros:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(acoes, 180), 14, yPosition + 7);
+        // Tipo de Atividade
+        doc.text(`Tipo de Atividade: ${activityType}`, 10, 60);
 
-            yPosition += 30;
-            doc.setFontSize(14);
-            doc.text("6. Observações Gerais:", 14, yPosition);
-            doc.setFontSize(12);
-            doc.text(doc.splitTextToSize(observacoes, 180), 14, yPosition + 7);
+        // Atividades Realizadas
+        doc.text("Atividades Realizadas:", 10, 70);
+        doc.text(activities, 10, 80);
 
-            // Adiciona o rodapé com o nome e data
-            doc.setFontSize(12);
-            doc.text(`\n\nRelatado por:\n[Seu Nome]\n[Função]\n${data}`, 14, yPosition + 50);
+        // Colaboradores Atendidos
+        doc.text("Colaboradores Atendidos:", 10, 100);
+        doc.text(collaborators, 10, 110);
 
-            // Salva o PDF com o nome e data atual
-            doc.save(`Relatorio_${data}.pdf`);
-        }
-    </script>
+        // Conteúdos Abordados
+        doc.text("Conteúdos Abordados:", 10, 130);
+        doc.text(topics, 10, 140);
+
+        // Dificuldades Encontradas
+        doc.text("Dificuldades Encontradas:", 10, 160);
+        doc.text(difficulties, 10, 170);
+
+        // Ações Corretivas ou Planos Futuros
+        doc.text("Ações Corretivas ou Planos Futuros:", 10, 190);
+        doc.text(actions, 10, 200);
+
+        // Observações Gerais
+        doc.text("Observações Gerais:", 10, 220);
+        doc.text(observations, 10, 230);
+
+        // Nome do Usuário
+        doc.text(`Nome do Usuário: ${userName}`, 10, 250);
+
+        // Formato do nome do arquivo com data e hora no formato DD/MM/AAAA
+        const currentDateTime = new Date();
+        const currentDay = String(currentDateTime.getDate()).padStart(2, '0');
+        const currentMonth = String(currentDateTime.getMonth() + 1).padStart(2, '0');
+        const currentYear = currentDateTime.getFullYear();
+        const hours = String(currentDateTime.getHours()).padStart(2, '0');
+        const minutes = String(currentDateTime.getMinutes()).padStart(2, '0');
+        
+        const fileName = `Relatorio_${marketName}_${currentDay}-${currentMonth}-${currentYear}_${hours}-${minutes}.pdf`;
+
+        // Salvar o PDF
+        doc.save(fileName);
+    }
+</script>
 
 </body>
 </html>

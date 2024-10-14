@@ -20,15 +20,17 @@
         label {
             font-weight: bold;
             margin-top: 10px;
+            display: block; /* Adicionado para alinhamento correto */
         }
 
         input, textarea, select {
-            width: 100%;
+            width: calc(100% - 20px); /* Ajuste para melhor espaçamento */
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
+            font-size: 14px; /* Tamanho da fonte ajustado */
         }
 
         button {
@@ -39,6 +41,7 @@
             cursor: pointer;
             border-radius: 5px;
             width: 100%;
+            font-size: 16px; /* Tamanho da fonte ajustado */
         }
 
         button:hover {
@@ -57,6 +60,9 @@
         @media (max-width: 600px) {
             h1 {
                 font-size: 24px;
+            }
+            input, textarea, select {
+                font-size: 12px; /* Ajuste de tamanho para telas menores */
             }
         }
     </style>
